@@ -1,7 +1,7 @@
 #!/bin/bash
 ##########################################################
 # Name: oracle-rdbms-server-12c-preinstall
-#
+# Version: 0.1
 # Description: A script to linux 6.x & 7.x version 
 # for oracle database preinstall configureation
 #
@@ -10,6 +10,7 @@
 
 USERID="1001"
 GROUPID="1001"
+TMP_LOCK="/tmp/oracle-rdbms-server-12c-preinstall.lock"
 BACKUPS_DIR="/var/log/oracle-validated/backup/`date "+%b-%d-%Y-%H-%M-%S"`"
 
 CUT=/bin/cut
@@ -50,7 +51,7 @@ f_sethosts(){
 		ipaddr=$(ip -f inet -4 -br addr | grep ^e | awk '{print $3}' | cut -d "/" -f1)
 		echo -e >> $HOSTSFILE
 		echo "# Oracle database hostname resolution" >> $HOSTSFILE
-		echo "${ipaddr} ${current_hostname}" >>  $HOSTSFILE
+		echo "${ipaddr} ${hostname}" >>  $HOSTSFILE
 	fi
 }
 
@@ -261,6 +262,12 @@ f_checkrpm(){
 	done
 }
 
+# Prevent scripts from running secondaryly
+if [[  -f $TMP_LOCK ]]; then
+	echo "This script has run ..."
+	exit
+fi
+
 # Close services firewall or iptables
 v=$(uname -r | cut -d l -f2 | cut -c 1)
 if [[ $v -eq 7 ]]; then
@@ -384,3 +391,5 @@ fi
 f_checkrpm;
 
 echo "The oracle database preinstall configureation is complete."
+
+/bin/touch $TMP_LOCK

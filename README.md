@@ -2,7 +2,8 @@
 - Description: A script to linux 6.x & 7.x version for oracle database 11g 12c preinstall configureation
 - Sample:
 ```sh
-[root@localhost ~]# ./oracle-rdbms-server-12c-silent-preinstall.sh 
+[root@localhost ~]# chmod +x oracle-rdbms-server-12c-preinstall.sh
+[root@localhost ~]# ./oracle-rdbms-server-12c-preinstall.sh
 Services firewalld status: stop
 Please enter your hostname [example-db12c]:example-db12c
 Setting hostname succeeded ... 
