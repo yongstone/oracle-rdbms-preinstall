@@ -38,7 +38,7 @@ f_sethostname(){
 }
 
 
-# Setting hosts
+# Setting hostname resolve
 f_sethosts(){
 	
 	HOSTSFILE="/etc/hosts"
@@ -50,7 +50,7 @@ f_sethosts(){
 	else
 		ipaddr=$(ip -f inet -4 -br addr | grep ^e | awk '{print $3}' | cut -d "/" -f1)
 		echo -e >> $HOSTSFILE
-		echo "# Oracle database hostname resolution" >> $HOSTSFILE
+		echo "# Oracle database hostname resolve" >> $HOSTSFILE
 		echo "${ipaddr} ${hostname}" >>  $HOSTSFILE
 	fi
 }
@@ -145,13 +145,14 @@ f_setlimits(){
 f_params(){
 	array_params[0]="# Oracle database kernel parameters"
 	array_params[1]="fs.aio-max-nr = 1048576"
-	array_params[2]="kernel.shmmni = 4096"
-	array_params[3]="kernel.sem = 32000 1024000000 500 32000"
-	array_params[4]="net.ipv4.ip_local_port_range = 9000 65500"
-	array_params[5]="net.core.rmem_default = 4194304"
-	array_params[6]="net.core.rmem_max = 4194304"
-	array_params[7]="net.core.wmem_default = 4194304"
-	array_params[8]="net.core.wmem_max = 4194304"
+	array_params[2]="fs.file-max = 6815744"
+	array_params[3]="kernel.shmmni = 4096"
+	array_params[4]="kernel.sem = 32000 1024000000 500 32000"
+	array_params[5]="net.ipv4.ip_local_port_range = 9000 65500"
+	array_params[6]="net.core.rmem_default = 4194304"
+	array_params[7]="net.core.rmem_max = 4194304"
+	array_params[8]="net.core.wmem_default = 4194304"
+	array_params[9]="net.core.wmem_max = 4194304"
 }
 
 # Setting EL7 oracle database kernel parameter
@@ -257,14 +258,14 @@ f_checkrpm(){
 	for listrpm in ${array_list_rpm[@]}; do
 		check_installed=$($RPM -qa | grep ^$listrpm | $CUT -d "-" -f1)
 		if [[ ! $check_installed ]]; then
-			echo "yum -y insstall ${listrpm}"
+			echo "yum -y install ${listrpm}"
 		fi
 	done
 }
 
 # Prevent scripts from running secondaryly
 if [[  -f $TMP_LOCK ]]; then
-	echo "This script has run ..."
+	echo "This script has run, Do not run it again ..."
 	exit
 fi
 
