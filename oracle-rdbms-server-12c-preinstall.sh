@@ -48,7 +48,8 @@ f_sethosts(){
 		echo "Failed to copy ${HOSTSFILE} to ${BACKUPS_DIR} ..."
 		return 1		
 	else
-		ipaddr=$(ip -f inet -4 -br addr | grep ^e | awk '{print $3}' | cut -d "/" -f1)
+		#ipaddr=$(ip -f inet -4 -br addr | grep ^e | awk '{print $3}' | cut -d "/" -f1)
+		ipaddr=$(ip -f inet -4 -o addr | cut -d " " -f2-10 | grep -E "^ens|^eth|^b" | awk '{print $3}' | cut -d "/" -f1)
 		echo -e >> $HOSTSFILE
 		echo "# Oracle database hostname resolve" >> $HOSTSFILE
 		echo "${ipaddr} ${hostname}" >>  $HOSTSFILE
